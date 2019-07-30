@@ -1,0 +1,317 @@
+#+TITLE: vulcans FreeBSD Emacs configuration
+#+AUTHOR: vulcan <vulcan@wired.sh>
+#+STARTUP: indent
+#+LAYOUT: post
+
+* Introduction
+** What is this?
+This is my configuration file for Emacs on FreeBSD, tailored *towards me and me only* - keep that in mind when (and if) you're using my custom setup. You can easily find my [[https://gitlab.com/nihilism/freebsd][FreeBSD]] or [[https://gitlab.com/nihilism/emacs][Emacs]] setup on my [[https://gitlab.com/nihilism/][Gitlab]]
+
+Out-of-the-box I find the default configuration unuseable, rather it comes with very little of what I need; developement, debugging and so-on. Good thing is that Emacs is **very** extendable in what you can do, and to which I present you with my Emacs configuration that I've adapted to my needs over time.
+
+Now that's out of the way, let's move onto the preliminaries.
+* Preliminaries
+** Setup and packages
+We want to use packages, so let's require it.
+#+BEGIN_SRC emacs-lisp
+(require 'package)
+(setq package-enable-at-startup nil)
+#+END_SRC
+
+By default, Emacs includes only the GNU package repository - whilst it offers a wide range of custom packages it's not updated as frequently.
+Let's change that by including melpa and melpa-stable.
+#+BEGIN_SRC emacs-lisp 
+(defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
+(defvar melpa '("melpa" . "https://melpa.org/packages/"))
+(defvar melpa-stable '("melpa-stable". "https://stable.melpa.org/packages/"))
+
+(setq package-archives nil)
+(add-to-list 'package-archives gnu t)
+(add-to-list 'package-archives melpa t)
+(add-to-list 'package-archives melpa-stable t)
+#+END_SRC
+
+Initialize the archives, refresh the contents if not already cached.
+#+BEGIN_SRC emacs-lisp
+  (unless package-archive-contents
+    (package-refresh-contents))
+#+END_SRC
+
+Ensure we have 'use-package' installed—required to pull in other packages/dependencies.
+#+BEGIN_SRC emacs-lisp
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+(require 'use-package)
+#+END_SRC
+
+Set the encoding to something sane.
+#+BEGIN_SRC emacs-lisp
+  (prefer-coding-system 'utf-8)
+  (setq locale-coding-system 'utf-8)
+  (set-default-coding-systems 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (set-selection-coding-system 'utf-8)
+  (setq-default buffer-file-coding-system 'utf-8)
+#+END_SRC
+
+Set default theme load path.
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+#+END_SRC
+* Behaviour
+Disable backups and auto-save files.
+#+BEGIN_SRC emacs-lisp
+  (setq backup-inhibited t)
+  (setq auto-save-default nil)
+  (setq auto-save-list-file-prefix nil)
+  (setq make-backup-files nil)
+#+END_SRC
+
+Disable Emacs creating lockfiles.
+#+BEGIN_SRC emacs-lisp
+  (setq create-lockfiles nil)
+#+END_SRC
+
+Create alias of yes-no, instead of having to type 'yes'/'no' each time for confirmation.
+#+BEGIN_SRC emacs-lisp
+    (defalias 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+* Appearance
+** Look and feel
+Enable line numbers globally.
+#+BEGIN_SRC emacs-lisp
+(setq column-number-mode t)
+(global-display-line-numbers-mode)
+#+END_SRC
+
+Enable gloabl-highlight mode (though, only if within a GUI, from the terminal things tend to look messy).
+#+BEGIN_SRC emacs-lisp
+(when window-system (global-hl-line-mode t))
+#+END_SRC
+
+Make symbols look pretty globally (limited to the GUI only, same reason as the above).
+#+BEGIN_SRC emacs-lisp
+  (use-package pretty-mode
+    :ensure t
+    :config
+    (require 'pretty-mode)
+    (when window-system (global-pretty-mode t)))
+#+END_SRC
+
+Highlights the selected area when changing buffers.
+#+BEGIN_SRC emacs-lisp
+  (use-package beacon
+    :ensure t
+    :config
+    (beacon-mode 1))
+#+END_SRC
+** Disable annoyances
+Disable the menu-bar, tool-bar and scroll-bar—these take up far too much screen estate and look awful.
+#+BEGIN_SRC emacs-lisp
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(toggle-scroll-bar -1)
+#+END_SRC
+
+I don't like startup splash-screens. Remove it.
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-splash-screen t)
+#+END_SRC
+
+Disable annoying bell.
+#+BEGIN_SRC emacs-lisp
+  (setq visible-bell nil)
+  (setq ring-bell-function 'ignore)
+#+END_SRC
+* Navigation
+** Buffers
+#+BEGIN_SRC emacs-lisp
+  (use-package ido-vertical-mode
+    :ensure t
+    :init
+    (ido-vertical-mode 1))
+#+END_SRC
+
+Set the scroll-speed to something more reasonable.
+#+BEGIN_SRC emacs-lisp
+  (setq scroll-conservatively 100)
+#+END_SRC
+
+Popular 'ivy' package to easily move between buffers.
+#+BEGIN_SRC emacs-lisp 
+  (use-package counsel :ensure t)  
+  (use-package ivy
+      :ensure t
+      :diminish (ivy-mode)
+      :bind (("C-x b" . ivy-switch-buffer))
+      :config
+      (ivy-mode 1)
+      (setq ivy-use-virtual-buffers t)
+      (setq ivy-display-style 'fancy)
+      (setq ivy-count-format "%d/%d "))
+#+END_SRC
+
+Quickly search the contents of a buffer.
+#+BEGIN_SRC emacs-lisp 
+  (use-package swiper
+    :ensure try
+    :bind (("C-s" . swiper)
+           ("C-r" . swiper)
+           ("M-x" . counsel-M-x)
+           ("C-x C-f" . counsel-find-file))
+    :config
+    (progn
+      (ivy-mode 1)
+      (setq ivy-use-virtual-buffers t)
+      (setq ivy-display-style 'fancy)
+      (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)))
+#+END_SRC
+
+An enhanced 'M-x' (buffer search) built on top of ido.
+#+BEGIN_SRC emacs-lisp
+  (use-package smex
+    :ensure t
+    :init (smex-initialize)
+    :bind
+    ("M-x" . smex))
+#+END_SRC
+
+Replace default list-buffer with ibuffer and and enable ibuffer expert mode.
+#+BEGIN_SRC emacs-lisp
+  (setq ibuffer-export t)
+  (defalias 'list-buffers 'ibuffer)
+#+END_SRC
+** Window management
+Break up windows into easy workspaces you can switch through with eyebrowse.
+#+BEGIN_SRC emacs-lisp
+  ;; Unset global M-[1-4] keys.
+    (dotimes (workspace 4)
+            (global-unset-key (kbd (format "M-%d" workspace))))
+
+  ;; 4 total workspaces.
+    (use-package eyebrowse
+      :ensure t
+      :config (progn
+                (define-key eyebrowse-mode-map (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
+                (define-key eyebrowse-mode-map (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
+                (define-key eyebrowse-mode-map (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
+                (define-key eyebrowse-mode-map (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
+                (define-key eyebrowse-mode-map (kbd "C-x ,") 'eyebrowse-rename-window-config)
+                (eyebrowse-mode t)
+                (setq eyebrowsce-new-workspace t)))
+#+END_SRC
+* Programming
+** Completion
+*** General
+Enable auto-complete mode globally.
+#+BEGIN_SRC emacs-lisp
+  (use-package auto-complete
+    :ensure t
+    :config
+    (require 'auto-complete)
+    (global-auto-complete-mode t))
+#+END_SRC
+
+Yas-snippet, provides a way to insert commonly used code snippets.
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :ensure t
+    :config
+    (yas-global-mode 1))
+
+  ;; Provides the actual snippets of code.
+  (use-package yasnippet-snippets :ensure t)
+#+END_SRC
+
+Automatically insert, wrap, unwrap, expand pairs and more.
+#+BEGIN_SRC emacs-lisp
+  (use-package smartparens
+    :ensure t
+    :hook (prog-mode . smartparens-mode)
+    :custom
+    (sp-escape-quotes-after-insert nil)
+    :config
+    (require 'smartparens-config)
+    (add-hook 'c++-mode-hook #'smartparens-mode)
+    (add-hook 'c-mode-hook #'smartparens-mode))
+
+  (show-paren-mode t)
+#+END_SRC
+*** C++ \ C
+Code completion using company/irony as the backend.
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :ensure t
+    :config
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 3))
+
+  (with-eval-after-load 'company
+    (define-key company-active-map (kbd "M-n") nil)
+    (define-key company-active-map (kbd "M-p") nil)
+    (define-key company-active-map (kbd "C-n") 'company-select-next)
+    (define-key company-active-map (kbd "C-p") 'company-select-previous))
+
+  (use-package company-irony
+    :ensure t
+    :config
+    (require 'company
+             (add-to-list 'company-backends 'company-irony)))
+
+  (use-package irony
+    :ensure t
+    :config
+    (add-hook 'c++-mode-hook 'irony-mode)
+    (add-hook 'c-mode-hook 'irony-mode)
+    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+  (with-eval-after-load 'company
+    (add-hook 'c++-mode-hook 'company-mode)
+    (add-hook 'c-mode-hook 'company-mode))
+
+  ;; Small hack to get irony working on FreeBSD.
+  (defun my--advice-irony-start-process (orig-func &rest args)
+    (let ((shell-file-name "/bin/sh"))
+      (apply orig-func args)))
+
+  (advice-add 'irony--start-server-process :around 'my--advice-irony-start-process)
+#+END_SRC
+*** Error checking
+On-the-fly syntax error warnings/messages.
+#+BEGIN_SRC emacs-lisp 
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode t))
+#+END_SRC
+** Formatting
+Automatically indent code inline.
+#+BEGIN_SRC emacs-lisp 
+  (use-package aggressive-indent :ensure t)
+#+END_SRC
+
+Removes all whitespace in the direction you're deleting.
+#+BEGIN_SRC emacs-lisp
+  (use-package hungry-delete
+    :ensure t
+    :config
+    (global-hungry-delete-mode))
+#+END_SRC
+** Source control
+Super handy package to handle all things git.
+#+BEGIN_SRC emacs-lisp
+  (use-package magit :ensure t)
+#+END_SRC
+
+Project management with projectile.
+#+BEGIN_SRC emacs-lisp 
+  (use-package projectile
+    :ensure t
+    :config
+      (projectile-mode)
+      (setq projectile-completion-system 'ivy)
+      (setq projectile-project-search-path '("~/Development/"))
+      (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+      (define-key projectile-mode-map (kbd "C-c C-p") 'projectile-command-map))
+#+END_SRC
