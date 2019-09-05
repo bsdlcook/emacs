@@ -1,5 +1,5 @@
-#+TITLE: vulcans FreeBSD Emacs configuration
-#+AUTHOR: vulcan <vulcan@wired.sh>
+#+TITLE: Lewis' FreeBSD Emacs configuration
+#+AUTHOR: Lewis Cook <vulcan@wired.sh>
 #+STARTUP: indent
 #+LAYOUT: post
 
@@ -277,6 +277,14 @@ Code completion using company/irony as the backend.
       (apply orig-func args)))
 
   (advice-add 'irony--start-server-process :around 'my--advice-irony-start-process)
+#+END_SRC
+*** Go mode
+#+BEGIN_SRC emacs-lisp
+  (use-package go-mode
+    :ensure t
+    :config
+    (autoload 'go-mode "go-mode" nil t)
+    (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode)))
 #+END_SRC
 *** Error checking
 On-the-fly syntax error warnings/messages.
