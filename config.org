@@ -61,6 +61,14 @@ Set default theme load path.
   (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 #+END_SRC
 * Behaviour
+Some tweaks to eshell.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'eshell-mode-hook (lambda ()
+                               (setq-local global-hl-line-mode nil)
+                               (display-line-numbers-mode 0)
+                               (setq-local beacon-mode nil)))
+#+END_SRC
+
 Disable backups and auto-save files.
 #+BEGIN_SRC emacs-lisp
   (setq backup-inhibited t)
@@ -86,7 +94,7 @@ Enable line numbers globally.
 (global-display-line-numbers-mode)
 #+END_SRC
 
-Enable gloabl-highlight mode (though, only if within a GUI, from the terminal things tend to look messy).
+Enable global-highlight mode (though, only if within a GUI, from the terminal things tend to look messy).
 #+BEGIN_SRC emacs-lisp
 (when window-system (global-hl-line-mode t))
 #+END_SRC
@@ -115,9 +123,10 @@ Disable the menu-bar, tool-bar and scroll-bar—these take up far too much scree
 (toggle-scroll-bar -1)
 #+END_SRC
 
-I don't like startup splash-screens. Remove it.
+I don't like startup splash-screens nor scratch message. Remove it.
 #+BEGIN_SRC emacs-lisp
-(setq inhibit-splash-screen t)
+  (setq inhibit-splash-screen t)
+  (setq initial-scratch-message nil)
 #+END_SRC
 
 Disable annoying bell.
