@@ -1,0 +1,11 @@
+alias clear clear-scrollback
+alias ab ansible $*
+alias abp ansible-playbook $*
+alias abg ansible-galaxy $*
+alias sr doas $*
+alias gits git status $*
+alias gitc git clone $*
+alias gita git add $*
+alias gitp git push -f origin $*
+alias gitd git diff $*
+alias gitm git commit -m $*
