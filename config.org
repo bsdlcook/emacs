@@ -65,8 +65,7 @@ Some tweaks to eshell.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'eshell-mode-hook (lambda ()
                                (setq-local global-hl-line-mode nil)
-                               (display-line-numbers-mode 0)
-                               (setq-local beacon-mode nil)))
+                               (display-line-numbers-mode 0)))
 #+END_SRC
 
 Disable backups and auto-save files.
@@ -108,13 +107,6 @@ Make symbols look pretty globally (limited to the GUI only, same reason as the a
     (when window-system (global-pretty-mode t)))
 #+END_SRC
 
-Highlights the selected area when changing buffers.
-#+BEGIN_SRC emacs-lisp
-  (use-package beacon
-    :ensure t
-    :config
-    (beacon-mode 1))
-#+END_SRC
 ** Disable annoyances
 Disable the menu-bar, tool-bar and scroll-bar—these take up far too much screen estate and look awful.
 #+BEGIN_SRC emacs-lisp
