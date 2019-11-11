@@ -261,12 +261,12 @@ Code completion using company/irony as the backend.
     (add-hook 'c++-mode-hook 'company-mode)
     (add-hook 'c-mode-hook 'company-mode))
 
-  ;; Small hack to get irony working on FreeBSD.
-  (defun my--advice-irony-start-process (orig-func &rest args)
-    (let ((shell-file-name "/bin/sh"))
-      (apply orig-func args)))
-
-  (advice-add 'irony--start-server-process :around 'my--advice-irony-start-process)
+  ;; Small hack to get irony working on FreeBSD. 
+  (if (string-equal system-type "berkeley-unix")
+      (defun my--advice-irony-start-process (orig-func &rest args)
+        (let ((shell-file-name "/bin/sh"))
+          (apply orig-func args)))
+  (advice-add 'irony--start-server-process :around 'my--advice-irony-start-process))
 #+END_SRC
 *** Go mode
 #+BEGIN_SRC emacs-lisp
