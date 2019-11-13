@@ -5,7 +5,7 @@
 
 * Introduction
 ** What is this?
-This is my configuration file for Emacs on FreeBSD, tailored *towards me and me only* - keep that in mind when (and if) you're using my custom setup. You can easily find my [[https://gitlab.com/nihilism/freebsd][FreeBSD]] or [[https://gitlab.com/nihilism/emacs][Emacs]] setup on my [[https://gitlab.com/nihilism/][Gitlab]]
+This is my configuration file for Emacs on FreeBSD, tailored *towards me and me only* - keep that in mind when (and if) you're using my custom setup. You can easily find my [[https://gitlab.com/lcook/freebsd][FreeBSD]] or [[https://gitlab.com/lcook/emacs][Emacs]] setup on my [[https://gitlab.com/lcook/][Gitlab]]
 
 Out-of-the-box I find the default configuration unuseable, rather it comes with very little of what I need; developement, debugging and so-on. Good thing is that Emacs is **very** extendable in what you can do, and to which I present you with my Emacs configuration that I've adapted to my needs over time.
 
