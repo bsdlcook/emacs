@@ -67,8 +67,8 @@ Set default theme load path.
 Some tweaks to eshell.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'eshell-mode-hook (lambda ()
-                               (setq-local global-hl-line-mode nil)
-                               (display-line-numbers-mode 0)))
+                                (setq-local global-hl-line-mode nil)
+                                (display-line-numbers-mode 0)))
 #+END_SRC
 
 Disable backups and auto-save files.
@@ -88,12 +88,27 @@ Create alias of yes-no, instead of having to type 'yes'/'no' each time for confi
 #+BEGIN_SRC emacs-lisp
     (defalias 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
+
+Auto revert buffers when files are changed on disk.
+#+BEGIN_SRC emacs-lisp
+  (use-package autorevert
+    :diminish auto-revert-mode
+    :config
+    (global-auto-revert-mode 1))
+#+END_SRC
 * Appearance
 ** Look and feel
 Enable line numbers globally.
 #+BEGIN_SRC emacs-lisp
   (setq column-number-mode t)
   (global-display-line-numbers-mode)
+#+END_SRC
+
+Explicity hide minor-modes in the mode-line.
+#+BEGIN_SRC emacs-lisp
+  (use-package diminish
+    :diminish abbrev-mode
+    :diminish auto-fill-function)
 #+END_SRC
 
 Enable global-highlight mode (though, only if within a GUI, from the terminal things tend to look messy).
@@ -206,6 +221,7 @@ Break up windows into easy workspaces you can switch through with eyebrowse.
 Enable auto-complete mode globally.
 #+BEGIN_SRC emacs-lisp
   (use-package auto-complete
+    :diminish auto-complete-mode
     :config
     (require 'auto-complete)
     (global-auto-complete-mode t))
@@ -213,7 +229,9 @@ Enable auto-complete mode globally.
 
 Yas-snippet, provides a way to insert commonly used code snippets.
 #+BEGIN_SRC emacs-lisp
-  (use-package yasnippet :config (yas-global-mode 1))
+  (use-package yasnippet
+    :diminish yas-minor-mode
+    :config (yas-global-mode 1))
 
   ;; Snippet provider.
   (use-package yasnippet-snippets)
@@ -222,6 +240,7 @@ Yas-snippet, provides a way to insert commonly used code snippets.
 Automatically insert, wrap, unwrap, expand pairs and more.
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
+    :diminish smartparens-mode
     :hook (prog-mode . smartparens-mode)
     :custom
     (sp-escape-quotes-after-insert nil)
@@ -236,6 +255,7 @@ Automatically insert, wrap, unwrap, expand pairs and more.
 Code completion using company/irony as the backend.
 #+BEGIN_SRC emacs-lisp
   (use-package company
+    :diminish company-mode
     :config
     (setq company-idle-delay 0)
     (setq company-minimum-prefix-length 3))
@@ -252,6 +272,7 @@ Code completion using company/irony as the backend.
              (add-to-list 'company-backends 'company-irony)))
 
   (use-package irony
+    :diminish irony-mode
     :config
     (add-hook 'c++-mode-hook 'irony-mode)
     (add-hook 'c-mode-hook 'irony-mode)
@@ -266,7 +287,7 @@ Code completion using company/irony as the backend.
       (defun my--advice-irony-start-process (orig-func &rest args)
         (let ((shell-file-name "/bin/sh"))
           (apply orig-func args)))
-  (advice-add 'irony--start-server-process :around 'my--advice-irony-start-process))
+    (advice-add 'irony--start-server-process :around 'my--advice-irony-start-process))
 #+END_SRC
 *** Go mode
 #+BEGIN_SRC emacs-lisp
@@ -278,7 +299,9 @@ Code completion using company/irony as the backend.
 *** Error checking
 On-the-fly syntax error warnings/messages.
 #+BEGIN_SRC emacs-lisp 
-  (use-package flycheck :init (global-flycheck-mode t))
+  (use-package flycheck
+    :diminish flycheck-mode
+    :init (global-flycheck-mode t))
 #+END_SRC
 ** Formatting
 Automatically indent code inline.
@@ -288,7 +311,9 @@ Automatically indent code inline.
 
 Removes all whitespace in the direction you're deleting.
 #+BEGIN_SRC emacs-lisp
-  (use-package hungry-delete :config (global-hungry-delete-mode))
+  (use-package hungry-delete
+    :diminish hungry-delete-mode
+    :config (global-hungry-delete-mode))
 #+END_SRC
 ** Source control
 Super handy package to handle all things git.
@@ -299,10 +324,11 @@ Super handy package to handle all things git.
 Project management with projectile.
 #+BEGIN_SRC emacs-lisp 
   (use-package projectile
+    :diminish projectile-mode
     :config
-      (projectile-mode)
-      (setq projectile-completion-system 'ivy)
-      (setq projectile-project-search-path '("~/Development/"))
-      (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-      (define-key projectile-mode-map (kbd "C-c C-p") 'projectile-command-map))
+    (projectile-mode)
+    (setq projectile-completion-system 'ivy)
+    (setq projectile-project-search-path '("~/Development/"))
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (define-key projectile-mode-map (kbd "C-c C-p") 'projectile-command-map))
 #+END_SRC
