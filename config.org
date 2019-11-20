@@ -98,10 +98,9 @@ Auto revert buffers when files are changed on disk.
 #+END_SRC
 * Appearance
 ** Look and feel
-Enable line numbers globally.
+Enable column mode in menu-bar.
 #+BEGIN_SRC emacs-lisp
   (setq column-number-mode t)
-  (global-display-line-numbers-mode)
 #+END_SRC
 
 Explicity hide minor-modes in the mode-line.
