@@ -197,24 +197,6 @@ Replace default list-buffer with ibuffer and and enable ibuffer expert mode.
   (setq ibuffer-export t)
   (defalias 'list-buffers 'ibuffer)
 #+END_SRC
-** Window management
-Break up windows into easy workspaces you can switch through with eyebrowse.
-#+BEGIN_SRC emacs-lisp
-  ;; Unset global M-[1-4] keys.
-    (dotimes (workspace 4)
-            (global-unset-key (kbd (format "M-%d" workspace))))
-
-  ;; 4 total workspaces.
-    (use-package eyebrowse
-      :config (progn
-                (define-key eyebrowse-mode-map (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
-                (define-key eyebrowse-mode-map (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
-                (define-key eyebrowse-mode-map (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
-                (define-key eyebrowse-mode-map (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
-                (define-key eyebrowse-mode-map (kbd "C-x ,") 'eyebrowse-rename-window-config)
-                (eyebrowse-mode t)
-                (setq eyebrowsce-new-workspace t)))
-#+END_SRC
 * Programming
 ** Completion
 *** General
