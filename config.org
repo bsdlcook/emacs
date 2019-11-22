@@ -135,6 +135,29 @@ I don't like startup splash-screens nor scratch message. Remove it.
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-splash-screen t)
   (setq initial-scratch-message nil)
+  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+#+END_SRC
+
+Fancy 'dashboard' splash-screen, customized to my likings with fancy icons.
+#+BEGIN_SRC emacs-lisp
+  (use-package all-the-icons)
+
+  (use-package dashboard
+    :diminish dashboard-mode
+    :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-banner-logo-title "ZEN EMACS - Enjoy Programming & Writing")
+    (setq dashboard-footer-icon "")
+    (setq dashboard-footer "❝The only way to make sense out of change is to plunge into it, move with it, and join the dance.❞ ― Alan W. Watts")
+    (setq dashboard-startup-banner "~/.emacs.d/themes/koi.png")
+    (setq dashboard-items '((recents  . 5)
+                            (projects . 5)))
+    (setq dashboard-center-content t)
+    (setq dashboard-set-navigator nil)
+    (setq dashboard-set-init-info nil)
+    (setq dashboard-set-header-icons t)
+    (setq dashboard-set-file-icons t)
+    (setq dashboard-show-shortcuts nil))
 #+END_SRC
 
 Disable annoying bell.
