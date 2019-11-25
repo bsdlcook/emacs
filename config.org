@@ -3,6 +3,18 @@
 #+STARTUP: indent
 #+LAYOUT: post
 
+#+BEGIN_SRC emacs-lisp
+  (setq user-email-address "vulcan@wired.sh"
+        user-full-name "Lewis Cook")
+
+  (defvar devel-dir "~/Development")
+  (defvar emacs-dir "~/.emacs.d")
+  (defvar theme-dir (concat emacs-dir "/themes/"))
+
+  (unless (file-directory-p devel-dir)
+    (make-directory devel-dir))
+#+END_SRC
+
 * Introduction
 ** What is this?
 This is my configuration file for Emacs on FreeBSD, tailored *towards me and me only* - keep that in mind when (and if) you're using my custom setup. You can easily find my [[https://gitlab.com/lcook/freebsd][FreeBSD]] or [[https://gitlab.com/lcook/emacs][Emacs]] setup on my [[https://gitlab.com/lcook/][Gitlab]]
@@ -61,7 +73,7 @@ Set the encoding to something sane.
 
 Set default theme load path.
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+  (add-to-list 'custom-theme-load-path theme-dir)
 #+END_SRC
 * Behaviour
 Some tweaks to eshell.
@@ -126,9 +138,9 @@ Make symbols look pretty globally (limited to the GUI only, same reason as the a
 ** Disable annoyances
 Disable the menu-bar, tool-bar and scroll-bar—these take up far too much screen estate and look awful.
 #+BEGIN_SRC emacs-lisp
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(toggle-scroll-bar -1)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (toggle-scroll-bar -1)
 #+END_SRC
 
 I don't like startup splash-screens nor scratch message. Remove it.
@@ -148,7 +160,7 @@ Fancy 'dashboard' splash-screen, customized to my likings with fancy icons.
     (setq dashboard-banner-logo-title "ZEN EMACS - Enjoy Programming & Writing"
           dashboard-footer-icon ""
           dashboard-footer "❝The only way to make sense out of change is to plunge into it, move with it, and join the dance.❞ ― Alan W. Watts"
-          dashboard-startup-banner "~/.emacs.d/themes/koi.png"
+          dashboard-startup-banner (concat theme-dir "koi.png")
           dashboard-items '((recents  . 5)
                             (projects . 5))
           dashboard-center-content t
@@ -331,7 +343,7 @@ Project management with projectile.
     :config
     (projectile-mode)
     (setq projectile-completion-system 'ivy
-          projectile-project-search-path '("~/Development/"))
+          projectile-project-search-path '(devel-dir))
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
     (define-key projectile-mode-map (kbd "C-c C-p") 'projectile-command-map))
 #+END_SRC
