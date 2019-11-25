@@ -73,10 +73,10 @@ Some tweaks to eshell.
 
 Disable backups and auto-save files.
 #+BEGIN_SRC emacs-lisp
-  (setq backup-inhibited t)
-  (setq auto-save-default nil)
-  (setq auto-save-list-file-prefix nil)
-  (setq make-backup-files nil)
+  (setq backup-inhibited t
+        auto-save-default nil
+        auto-save-list-file-prefix nil
+        make-backup-files nil)
 #+END_SRC
 
 Disable Emacs creating lockfiles.
@@ -86,7 +86,7 @@ Disable Emacs creating lockfiles.
 
 Create alias of yes-no, instead of having to type 'yes'/'no' each time for confirmation.
 #+BEGIN_SRC emacs-lisp
-    (defalias 'yes-or-no-p 'y-or-n-p)
+  (defalias 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
 
 Auto revert buffers when files are changed on disk.
@@ -133,37 +133,36 @@ Disable the menu-bar, tool-bar and scroll-bar—these take up far too much scree
 
 I don't like startup splash-screens nor scratch message. Remove it.
 #+BEGIN_SRC emacs-lisp
-  (setq inhibit-splash-screen t)
-  (setq initial-scratch-message nil)
-  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+  (setq inhibit-splash-screen t
+        initial-scratch-message nil
+        initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 #+END_SRC
 
 Fancy 'dashboard' splash-screen, customized to my likings with fancy icons.
 #+BEGIN_SRC emacs-lisp
   (use-package all-the-icons)
-
   (use-package dashboard
     :diminish dashboard-mode
     :config
     (dashboard-setup-startup-hook)
-    (setq dashboard-banner-logo-title "ZEN EMACS - Enjoy Programming & Writing")
-    (setq dashboard-footer-icon "")
-    (setq dashboard-footer "❝The only way to make sense out of change is to plunge into it, move with it, and join the dance.❞ ― Alan W. Watts")
-    (setq dashboard-startup-banner "~/.emacs.d/themes/koi.png")
-    (setq dashboard-items '((recents  . 5)
-                            (projects . 5)))
-    (setq dashboard-center-content t)
-    (setq dashboard-set-navigator nil)
-    (setq dashboard-set-init-info nil)
-    (setq dashboard-set-header-icons t)
-    (setq dashboard-set-file-icons t)
-    (setq dashboard-show-shortcuts nil))
+    (setq dashboard-banner-logo-title "ZEN EMACS - Enjoy Programming & Writing"
+          dashboard-footer-icon ""
+          dashboard-footer "❝The only way to make sense out of change is to plunge into it, move with it, and join the dance.❞ ― Alan W. Watts"
+          dashboard-startup-banner "~/.emacs.d/themes/koi.png"
+          dashboard-items '((recents  . 5)
+                            (projects . 5))
+          dashboard-center-content t
+          dashboard-set-navigator nil
+          dashboard-set-init-info nil
+          dashboard-set-header-icons t
+          dashboard-set-file-icons t
+          dashboard-show-shortcuts nil))
 #+END_SRC
 
 Disable annoying bell.
 #+BEGIN_SRC emacs-lisp
-  (setq visible-bell nil)
-  (setq ring-bell-function 'ignore)
+  (setq visible-bell nil
+        ring-bell-function 'ignore)
 #+END_SRC
 * Navigation
 ** Buffers
@@ -182,13 +181,13 @@ Popular 'ivy' package to easily move between buffers.
 #+BEGIN_SRC emacs-lisp 
   (use-package counsel)
   (use-package ivy
-      :diminish (ivy-mode)
-      :bind (("C-x b" . ivy-switch-buffer))
-      :config
-      (ivy-mode 1)
-      (setq ivy-use-virtual-buffers t)
-      (setq ivy-display-style 'fancy)
-      (setq ivy-count-format "%d/%d "))
+    :diminish (ivy-mode)
+    :bind (("C-x b" . ivy-switch-buffer))
+    :config
+    (ivy-mode 1)
+    (setq ivy-use-virtual-buffers t
+          ivy-display-style 'fancy
+          ivy-count-format "%d/%d "))
 #+END_SRC
 
 Quickly search the contents of a buffer.
@@ -201,8 +200,8 @@ Quickly search the contents of a buffer.
     :config
     (progn
       (ivy-mode 1)
-      (setq ivy-use-virtual-buffers t)
-      (setq ivy-display-style 'fancy)
+      (setq ivy-use-virtual-buffers t
+            ivy-display-style 'fancy)
       (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)))
 #+END_SRC
 
@@ -261,8 +260,8 @@ Code completion using company/irony as the backend.
   (use-package company
     :diminish company-mode
     :config
-    (setq company-idle-delay 0)
-    (setq company-minimum-prefix-length 3))
+    (setq company-idle-delay 0
+          company-minimum-prefix-length 3))
 
   (with-eval-after-load 'company
     (define-key company-active-map (kbd "M-n") nil)
@@ -331,8 +330,8 @@ Project management with projectile.
     :diminish projectile-mode
     :config
     (projectile-mode)
-    (setq projectile-completion-system 'ivy)
-    (setq projectile-project-search-path '("~/Development/"))
+    (setq projectile-completion-system 'ivy
+          projectile-project-search-path '("~/Development/"))
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
     (define-key projectile-mode-map (kbd "C-c C-p") 'projectile-command-map))
 #+END_SRC
