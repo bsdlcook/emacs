@@ -76,13 +76,6 @@ Set default theme load path.
   (add-to-list 'custom-theme-load-path theme-dir)
 #+END_SRC
 * Behaviour
-Some tweaks to eshell.
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'eshell-mode-hook (lambda ()
-                                (setq-local global-hl-line-mode nil)
-                                (display-line-numbers-mode 0)))
-#+END_SRC
-
 Disable backups and auto-save files.
 #+BEGIN_SRC emacs-lisp
   (setq backup-inhibited t
