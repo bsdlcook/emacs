@@ -10,7 +10,7 @@
  '(sp-escape-quotes-after-insert nil))
 
 (set-face-attribute 'default nil
-                    :family "VictorMono"
+                    :family "Iosevka"
                     :height 130
                     :weight 'normal
                     :width 'normal)
